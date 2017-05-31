@@ -1,0 +1,49 @@
+import Fugue.System.Policy as .
+
+composition
+
+# Accounts
+fugueAcct: Account { accountId: "fugue-1494002215369" }
+devAcct:   Account { accountId: "pi-dev-fidcom-1494015825030" }
+
+# Principals (Users)
+adminUser: User { userId: "admin" }
+jenkinsUser: User { userId: "jenkins" }
+
+# Groups (Lists of Users)
+adminGroup: [adminUser]
+entSecGroup: []
+buSecGroup: []
+entNetEngGroup: []
+readOnlyGroup: []
+deployGroup: [jenkinsUser]
+
+# Policies
+adminRules: [
+  accountTableRules {
+    principals: adminGroup, 
+    actions: allAccountTableActions
+  },
+  accountRules {
+    principals: [adminUser], 
+    accounts: [AllAccounts],
+    actions: allAccountActions
+  },
+  rbacRules {
+    principals: [adminUser],
+    actions: allRbacActions 
+  }
+]
+
+deployRules: [ 
+  accountRules {
+    principals: deployGroup,
+    accounts: [devAcct],
+    actions: [
+      AccountRunProcess,
+      AccountUpdateProcess,
+      AccountStatusProcess,
+      AccountKillProcess,    
+    ]
+  }
+]
