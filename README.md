@@ -1,8 +1,18 @@
 # Policy As Code
 
+Ludwig enables you to perform validations on compositions, ensuring they are compliant at compile time instead of at runtime. 
+
+In this example, all validations are defined in `Corp/InfoSecStandards.lw`. 
+
+The `Environment` type is defined in `Corp/Environment.lw`, which determines acceptable environments in which users may run compositions. The environment is set by an environment variable, `ENVIRONMENT`, and valid choices are `DEV`, `QA`, and `PROD`. 
+
+The files in the `Config` folder contain configuration details about each environment. 
+
+The `Compositions` folder contains compositions that users may run and which must adhere to the validations in `InfoSecStandards.lw`.
+
 ## Compile Time Validations
 
-We can validate our infrastructure by ensuring all our compositions and Ludwig libraries compile. That's what the `Makefile` does for you. We'll run through some categories of validation below. All validations are defined in `InfoSecStandards.lw`.
+We can validate our infrastructure by ensuring all our compositions and Ludwig libraries compile. That's what the `Makefile` does for you. We'll run through some categories of validation below.
 
 ### Compliant Code
 
@@ -143,3 +153,9 @@ $ ENVIRONMENT=DEV make
 You should see an error: "Failed Compliance Validation: Must be a valid EC2 instance type. Please see InfoSec."
 
 ![fugue](images/fugue-validate-instancetype.gif)
+
+### Next Steps
+
+Feel free to explore validations further by browsing `InfoSecStandards.lw`. Experiment with changing those validations, or write new ones. You can also create your own composition incorporating validations.
+
+To learn more about writing Ludwig and using Fugue, [visit our docs site](https://docs.fugue.co/learn.html). If you have any questions, reach out to support@fugue.co.
