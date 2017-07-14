@@ -1,14 +1,30 @@
 # Policy As Code
 
-Ludwig enables you to perform validations on compositions, ensuring they are compliant at compile time instead of at runtime. 
+Ludwig enables you to perform validations on compositions, ensuring they are compliant with your policies and best practices at compile time instead of at runtime.
 
-In this example, all validations are defined in `Corp/InfoSecStandards.lw`. 
+All organizations have policies that specify how environments should be provisioned in development, QA, and production. This example demonstrates how different validations can be applied to those environments based on an environment variable. A description of the files contained in this repo is below:
+
+<pre>
+├── Config                                      Contains configuration information
+│   ├── Environment                               Specifies configuration details for each environment
+│   │   ├── Dev.lw
+│   │   ├── Prod.lw
+│   │   └── QA.lw
+│   └── Environment.lw                            Checks the environment value to determine which config in Config/Environment to use 
+├── Corp                                        Contains compositions for organization-specific policies
+│   ├── ArtifactRepo.lw                           Creates an artifact repository (i.e. a place to store executables and files) based on the environment configuration
+│   ├── DeveloperEnvironment.lw                   Composition for creating a developer environment
+│   ├── DeveloperEnvironmentConfig.lw             userData for creating the developer environment
+│   ├── Environment.lw                            Defines the environments where users may run compositions
+│   └── InfoSecStandards.lw                       Contains all validations
+├── Corp.lw                                     Top-level composition
+├── Makefile                                    Makefile for compiling compositions
+├── compositions                                Contains compositions that users may run and which must adhere to the validations in `InfoSecStandards.lw`
+│   ├── CreateArtifactRepo.lw
+│   └── CreateDeveloperEnvironment.lw
+</pre>	
 
 The `Environment` type is defined in `Corp/Environment.lw`, which determines acceptable environments in which users may run compositions. The environment is set by an environment variable, `ENVIRONMENT`, and valid choices are `DEV`, `QA`, and `PROD`. 
-
-The files in the `Config` folder contain configuration details about each environment. 
-
-The `Compositions` folder contains compositions that users may run and which must adhere to the validations in `InfoSecStandards.lw`.
 
 ## Compile Time Validations
 
@@ -16,7 +32,7 @@ We can validate our infrastructure by ensuring all our compositions and Ludwig l
 
 ### Compliant Code
 
-`Environment.lw` defines the Environment type, based on the contents of the `ENVIRONMENT` environment variable. Allowed values are `DEV`, `QA`, and `PROD`. To see the compositions compile successfully, set the environment variable and run the Makefile:
+`Config/Environment.lw` defines the Environment type, based on the contents of the `ENVIRONMENT` environment variable. Allowed values are `DEV`, `QA`, and `PROD`. To see the compositions compile successfully, set the environment variable and run the Makefile:
 
 ```
 $ ENVIRONMENT=DEV make
